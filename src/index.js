@@ -1,15 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './styles/index.css';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
+import {
+  ApolloProvider,
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache
+} from '@apollo/client';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000'
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache()
+})
+
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement)
+
 root.render(
-  <React.StrictMode>
+  <StrictMode> 
+  <ApolloProvider client={client}>
     <App />
-  </React.StrictMode>
-);
+  </ApolloProvider>
+  </StrictMode>
+)
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
